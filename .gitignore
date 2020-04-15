@@ -1,12 +1,42 @@
+# VSCode extension
+.vscode/
+/.favorites.json
+
+# JavaScript & Libraries
 *.js
 !jest.config.js
 *.d.ts
 node_modules
 
-# CDK asset staging directory
-.cdk.staging
-cdk.out
+# TypeScript incremental build states
+*.tsbuildinfo
 
 # Parcel build directories
 .cache
 .build
+
+# Local state files & OS specifics
+.DS_Store
+node_modules/
+lerna-debug.log
+dist/
+pack/
+.BUILD_COMPLETED
+.local-npm/
+.tools/
+coverage/
+.nyc_output
+.nycrc
+.LAST_BUILD
+*.sw[a-z]
+*~
+.idea
+
+# CDK Context & Staging files
+cdk.context.json
+.cdk.staging/
+cdk.out/
+*.tabl.json
+
+# Generated jest config
+jest.config.gen.json
