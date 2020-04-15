@@ -1,10 +1,17 @@
-import { EmptyModel, MockIntegration, PassthroughBehavior, RestApi } from '@aws-cdk/aws-apigateway';
+import { LambdaRestApi } from '@aws-cdk/aws-apigateway';
 import { UserPool } from '@aws-cdk/aws-cognito';
+import { AssetCode, Function, Runtime } from '@aws-cdk/aws-lambda';
 import * as cdk from '@aws-cdk/core';
 
 export class TodolistServerlessStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
+
+    const todolistFunction = new Function(this, 'todolistFunction', {
+      runtime: Runtime.NODEJS_12_X,
+      code: new AssetCode('lambda'),
+      handler: 'index.handler'
+    });
 
     const todolistUserPool = new UserPool(this, 'todolist', {
       signInAliases: {
@@ -12,37 +19,11 @@ export class TodolistServerlessStack extends cdk.Stack {
       }
     });
 
-    const todolistRestApi = new RestApi(this, 'todolistRestApi', {
-      restApiName: 'Todolist API'
+    const todolistLambdaRestApi = new LambdaRestApi(this, 'todolistRestApi', {
+      restApiName: 'Todolist API',
+      handler: todolistFunction,
+      proxy: false
     });
-    todolistRestApi.root.addMethod("GET", new MockIntegration({
-      integrationResponses: [{
-        statusCode: "200",
-        responseParameters: {
-          "method.response.header.Access-Control-Allow-Headers":
-            "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-          "method.response.header.Access-Control-Allow-Origin": "'*'",
-          "method.response.header.Access-Control-Allow-Credentials": "'false'",
-          "method.response.header.Access-Control-Allow-Methods": "'GET'",
-        }
-      }],
-      passthroughBehavior: PassthroughBehavior.NEVER,
-      requestTemplates: {
-        "application/json": "{\"statusCode\": 200}"
-      }
-    }), {
-      methodResponses: [{
-        statusCode: "200",
-        responseParameters: {
-          "method.response.header.Access-Control-Allow-Headers": true,
-          "method.response.header.Access-Control-Allow-Origin": true,
-          "method.response.header.Access-Control-Allow-Credentials": true,
-          "method.response.header.Access-Control-Allow-Methods": true,
-        },
-        responseModels: {
-          "application/json": new EmptyModel()
-        },
-      }]
-    })
+    todolistLambdaRestApi.root.addMethod("GET")
   }
 }
