@@ -1,4 +1,4 @@
-import { LambdaRestApi } from '@aws-cdk/aws-apigateway';
+import { AuthorizationType, CfnAuthorizer, LambdaIntegration, LambdaRestApi } from '@aws-cdk/aws-apigateway';
 import { UserPool } from '@aws-cdk/aws-cognito';
 import { AssetCode, Function, Runtime } from '@aws-cdk/aws-lambda';
 import * as cdk from '@aws-cdk/core';
@@ -24,6 +24,20 @@ export class TodolistServerlessStack extends cdk.Stack {
       handler: todolistFunction,
       proxy: false
     });
-    todolistLambdaRestApi.root.addMethod("GET")
+
+    const authorizer = new CfnAuthorizer(this, 'cfnAuth', {
+      restApiId: todolistLambdaRestApi.restApiId,
+      name: 'TodolistAPIAuthorizer',
+      type: 'COGNITO_USER_POOLS',
+      identitySource: 'method.request.header.Authorization',
+      providerArns: [todolistUserPool.userPoolArn],
+    });
+
+    todolistLambdaRestApi.root.addMethod("GET", new LambdaIntegration(todolistFunction), {
+      authorizationType: AuthorizationType.COGNITO,
+      authorizer: {
+        authorizerId: authorizer.ref
+      }
+    });
   }
 }
