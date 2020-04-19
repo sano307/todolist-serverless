@@ -15,8 +15,8 @@ aws_secret_access_key = yyy
 
 | Software                 | Install (Mac)                                | Version |
 |--------------------------|----------------------------------------------|-----|
-| Node.js                  | `brew install nodebrew` | `12.16.2` |
-| npm                      | - | `6.14.4` |
+| Node.js                  | `brew install nodebrew`</br>`nodebrew install v12.12.0`</br>`nodebrew use v12.12.0` | `12.12.0` |
+| npm                      | - | `6.11.3` |
 | AWS CDK                  | `npm install -g aws-cdk` | `1.32.2` |
 
 ## Build
