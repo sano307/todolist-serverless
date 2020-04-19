@@ -85,7 +85,7 @@ export class TodolistServerlessStack extends cdk.Stack {
       }
     };
 
-    const todolist = todolistRestApi.root.addResource('todolist');
+    const todolist = todolistRestApi.root.addResource('todolists');
     const createIntegration = new LambdaIntegration(createTodolistLambda);
     todolist.addMethod("POST", createIntegration, cognitoAuthorization);
 
