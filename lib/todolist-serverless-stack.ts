@@ -45,9 +45,20 @@ export class TodolistServerlessStack extends cdk.Stack {
       }
     });
 
+    const deleteTodolistLambda = new Function(this, 'deleteTodolistFunction', {
+      runtime: Runtime.NODEJS_12_X,
+      code: new AssetCode('lambda'),
+      handler: 'delete.handler',
+      environment: {
+        TABLE_NAME: todolistTable.tableName,
+        PRIMARY_KEY: 'todoId'
+      }
+    });
+
     todolistTable.grantWriteData(createTodolistLambda);
     todolistTable.grantReadData(readTodolistLambda);
     todolistTable.grantWriteData(updateTodolistLambda);
+    todolistTable.grantWriteData(deleteTodolistLambda);
 
     const todolistRestApi = new RestApi(this, 'todolistRestApi', {
       restApiName: 'Todolist API'
@@ -84,5 +95,8 @@ export class TodolistServerlessStack extends cdk.Stack {
 
     const updateIntegration = new LambdaIntegration(updateTodolistLambda);
     todolistForSingle.addMethod('PATCH', updateIntegration, cognitoAuthorization);
+
+    const deleteIntegration = new LambdaIntegration(deleteTodolistLambda);
+    todolistForSingle.addMethod('DELETE', deleteIntegration, cognitoAuthorization);
   }
 }
