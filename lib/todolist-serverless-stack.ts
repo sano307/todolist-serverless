@@ -8,6 +8,8 @@ export class TodolistServerlessStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const TODOLIST_TABLE_NAME = 'todolist'
+
     const todolistTable = new Table(this, 'todolistTable', {
       partitionKey: {
         name: 'todoId', type: AttributeType.STRING
@@ -21,7 +23,7 @@ export class TodolistServerlessStack extends cdk.Stack {
       code: new AssetCode('lambda'),
       handler: 'create.handler',
       environment: {
-        TABLE_NAME: todolistTable.tableName
+        TABLE_NAME: TODOLIST_TABLE_NAME
       }
     });
 
@@ -30,7 +32,7 @@ export class TodolistServerlessStack extends cdk.Stack {
       code: new AssetCode('lambda'),
       handler: 'read.handler',
       environment: {
-        TABLE_NAME: todolistTable.tableName,
+        TABLE_NAME: TODOLIST_TABLE_NAME,
         PRIMARY_KEY: 'todoId'
       }
     });
@@ -40,7 +42,7 @@ export class TodolistServerlessStack extends cdk.Stack {
       code: new AssetCode('lambda'),
       handler: 'update.handler',
       environment: {
-        TABLE_NAME: todolistTable.tableName,
+        TABLE_NAME: TODOLIST_TABLE_NAME,
         PRIMARY_KEY: 'todoId'
       }
     });
@@ -50,7 +52,7 @@ export class TodolistServerlessStack extends cdk.Stack {
       code: new AssetCode('lambda'),
       handler: 'delete.handler',
       environment: {
-        TABLE_NAME: todolistTable.tableName,
+        TABLE_NAME: TODOLIST_TABLE_NAME,
         PRIMARY_KEY: 'todoId'
       }
     });
