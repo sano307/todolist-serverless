@@ -1,7 +1,8 @@
 import { AuthorizationType, CfnAuthorizer, LambdaIntegration, RestApi } from '@aws-cdk/aws-apigateway';
 import { UserPool } from '@aws-cdk/aws-cognito';
 import { Table, AttributeType } from '@aws-cdk/aws-dynamodb';
-import { AssetCode, Function, Runtime } from '@aws-cdk/aws-lambda';
+import { AssetCode, Function, LayerVersion, Runtime } from '@aws-cdk/aws-lambda';
+import { NODE_LAMBDA_LAYER_DIR } from './process/setup';
 import * as cdk from '@aws-cdk/core';
 
 export class TodolistServerlessStack extends cdk.Stack {
@@ -11,19 +12,30 @@ export class TodolistServerlessStack extends cdk.Stack {
     const TODOLIST_TABLE_NAME = 'todolist'
 
     const todolistTable = new Table(this, 'todolistTable', {
-      partitionKey: {
-        name: 'todoId', type: AttributeType.STRING
-      },
+      partitionKey: { name: 'userId', type: AttributeType.STRING },
+      sortKey: { name: 'createdAt', type: AttributeType.NUMBER },
       tableName: 'todolist',
       removalPolicy: cdk.RemovalPolicy.DESTROY
+    });
+
+    todolistTable.addLocalSecondaryIndex({
+      indexName: "todoId-index",
+      sortKey: { name: "todoId", type: AttributeType.STRING }
+    });
+
+    const nodeModulesLayer = new LayerVersion(this, 'NodeModulesLayer', {
+      code: AssetCode.fromAsset(NODE_LAMBDA_LAYER_DIR),
+      compatibleRuntimes: [Runtime.NODEJS_12_X]
     });
 
     const createTodolistLambda = new Function(this, 'createTodolistFunction', {
       runtime: Runtime.NODEJS_12_X,
       code: new AssetCode('lambda'),
       handler: 'create.handler',
+      layers: [nodeModulesLayer],
       environment: {
-        TABLE_NAME: TODOLIST_TABLE_NAME
+        TABLE_NAME: TODOLIST_TABLE_NAME,
+        PRIMARY_KEY: 'userId'
       }
     });
 
