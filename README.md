@@ -31,6 +31,15 @@ npm run build
 npm run test
 ```
 
+## Initialize
+
+- CloudFormation で利⽤するデプロイ⽤の S3 バケットを作成
+  - 最初だけ必要なコマンド
+
+```shell
+cdk bootstrap
+```
+
 ## Deploy
 
 ```shell
