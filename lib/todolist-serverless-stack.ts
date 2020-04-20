@@ -29,8 +29,7 @@ export class TodolistServerlessStack extends cdk.Stack {
       handler: 'create.handler',
       layers: [nodeModulesLayer],
       environment: {
-        TABLE_NAME: TODOLIST_TABLE_NAME,
-        PRIMARY_KEY: 'userId'
+        TABLE_NAME: TODOLIST_TABLE_NAME
       }
     });
 
