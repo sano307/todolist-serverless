@@ -1,25 +1,27 @@
-import { Buffer } from 'buffer';
+import { Buffer } from "buffer";
 
-const AWS = require('aws-sdk');
+const AWS = require("aws-sdk");
 const db = new AWS.DynamoDB.DocumentClient();
-const TABLE_NAME = process.env.TABLE_NAME || '';
+const TABLE_NAME = process.env.TABLE_NAME || "";
 
-export const handler = async (event: any = {}) : Promise <any> => {
-
-  const sections  = event.headers["Authorization"].split('.');
-  const payload = JSON.parse(Buffer.from(sections[1], 'base64').toString());
+export const handler = async (event: any = {}): Promise<any> => {
+  const sections = event.headers["Authorization"].split(".");
+  const payload = JSON.parse(Buffer.from(sections[1], "base64").toString());
 
   const userId = payload["cognito:username"];
   if (!userId) {
-    return { statusCode: 400, body: `Error: You are missing the path parameter` };
+    return {
+      statusCode: 400,
+      body: `Error: You are missing the path parameter`,
+    };
   }
 
   const params = {
     TableName: TABLE_NAME,
     KeyConditionExpression: "userId = :u",
     ExpressionAttributeValues: {
-      ":u": userId
-    }
+      ":u": userId,
+    },
   };
 
   try {
