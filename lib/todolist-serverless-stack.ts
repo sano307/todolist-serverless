@@ -59,9 +59,11 @@ export class TodolistServerlessStack extends cdk.Stack {
       runtime: Runtime.NODEJS_12_X,
       code: new AssetCode('lambda'),
       handler: 'update.handler',
+      layers: [nodeModulesLayer],
       environment: {
         TABLE_NAME: TODOLIST_TABLE_NAME,
-        PRIMARY_KEY: 'todoId'
+        PARTITION_KEY: TODOLIST_TABLE_PARTITION_KEY,
+        SORT_KEY: TODOLIST_TABLE_SORT_KEY
       }
     });
 
