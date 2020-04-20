@@ -1,7 +1,7 @@
+import * as AWS from "aws-sdk";
 import { DateTime } from "luxon";
 import * as uuid from "uuid";
 
-const AWS = require("aws-sdk");
 const db = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = process.env.TABLE_NAME || "";
 

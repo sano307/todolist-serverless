@@ -1,7 +1,7 @@
+import * as AWS from "aws-sdk";
 import { Buffer } from "buffer";
 import { DateTime } from "luxon";
 
-const AWS = require("aws-sdk");
 const db = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = process.env.TABLE_NAME || "";
 const PARTITION_KEY = process.env.PARTITION_KEY || "";
