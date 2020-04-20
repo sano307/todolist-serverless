@@ -1,24 +1,31 @@
 const AWS = require('aws-sdk');
 const db = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = process.env.TABLE_NAME || '';
-const PRIMARY_KEY = process.env.PRIMARY_KEY || '';
+const PARTITION_KEY = process.env.PARTITION_KEY || '';
+const SORT_KEY = process.env.SORT_KEY || '';
 
 export const handler = async (event: any = {}) : Promise <any> => {
 
+  const sections  = event.headers["Authorization"].split('.');
+  const payload = JSON.parse(Buffer.from(sections[1], 'base64').toString());
+
+  const userId = payload["cognito:username"];
   const todoId = event.pathParameters.todoId;
-  if (!todoId) {
-    return { statusCode: 400, body: `Error: You are missing the path parameter id` };
+  if (!userId || !todoId) {
+    return { statusCode: 400, body: `Error: You are missing the path parameter` };
   }
 
   const params = {
     TableName: TABLE_NAME,
     Key: {
-      [PRIMARY_KEY]: todoId
+      [PARTITION_KEY]: userId,
+      [SORT_KEY]: todoId
     }
   };
 
   try {
     await db.delete(params).promise();
+
     return { statusCode: 200, body: '' };
   } catch (dbError) {
     return { statusCode: 500, body: JSON.stringify(dbError) };
