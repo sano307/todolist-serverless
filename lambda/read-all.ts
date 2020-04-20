@@ -4,7 +4,7 @@ import { Buffer } from "buffer";
 const db = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = process.env.TABLE_NAME || "";
 
-export const handler = async (event: any = {}): Promise<any> => {
+export const handler = async (event: any = {}): Promise<any> => { // eslint-disable-line
   const sections = event.headers["Authorization"].split(".");
   const payload = JSON.parse(Buffer.from(sections[1], "base64").toString());
 
