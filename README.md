@@ -25,6 +25,20 @@ aws_secret_access_key = yyy
 npm run build
 ```
 
+## Lint
+
+- 事前検知
+
+```shell
+npm run lint
+```
+
+- 自動的にコードのフォーマットを直し
+
+```shell
+npm run lint:fix
+```
+
 ## Test
 
 ```shell
