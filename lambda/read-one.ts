@@ -3,6 +3,8 @@ import { Buffer } from 'buffer';
 const AWS = require('aws-sdk');
 const db = new AWS.DynamoDB.DocumentClient();
 const TABLE_NAME = process.env.TABLE_NAME || '';
+const PARTITION_KEY = process.env.PARTITION_KEY || '';
+const SORT_KEY = process.env.SORT_KEY || '';
 
 export const handler = async (event: any = {}) : Promise <any> => {
 
@@ -17,16 +19,15 @@ export const handler = async (event: any = {}) : Promise <any> => {
 
   const params = {
     TableName: TABLE_NAME,
-    KeyConditionExpression: "userId = :u and todoId = :t",
-    ExpressionAttributeValues: {
-      ":u": userId,
-      ":t": todoId
+    Key: {
+      [PARTITION_KEY]: userId,
+      [SORT_KEY]: todoId
     }
   };
 
   try {
-    const response = await db.query(params).promise();
-    return { statusCode: 200, body: JSON.stringify(response.Items[0]) };
+    const response = await db.get(params).promise();
+    return { statusCode: 200, body: JSON.stringify(response.Item) };
   } catch (dbError) {
     return { statusCode: 500, body: JSON.stringify(dbError) };
   }

@@ -10,10 +10,12 @@ export class TodolistServerlessStack extends cdk.Stack {
     super(scope, id, props);
 
     const TODOLIST_TABLE_NAME = 'todolist'
+    const TODOLIST_TABLE_PARTITION_KEY = 'userId'
+    const TODOLIST_TABLE_SORT_KEY = 'todoId'
 
     const todolistTable = new Table(this, 'todolistTable', {
-      partitionKey: { name: 'userId', type: AttributeType.STRING },
-      sortKey: { name: 'todoId', type: AttributeType.STRING },
+      partitionKey: { name: TODOLIST_TABLE_PARTITION_KEY, type: AttributeType.STRING },
+      sortKey: { name: TODOLIST_TABLE_SORT_KEY, type: AttributeType.STRING },
       tableName: 'todolist',
       removalPolicy: cdk.RemovalPolicy.DESTROY
     });
@@ -38,7 +40,9 @@ export class TodolistServerlessStack extends cdk.Stack {
       code: new AssetCode('lambda'),
       handler: 'read-one.handler',
       environment: {
-        TABLE_NAME: TODOLIST_TABLE_NAME
+        TABLE_NAME: TODOLIST_TABLE_NAME,
+        PARTITION_KEY: TODOLIST_TABLE_PARTITION_KEY,
+        SORT_KEY: TODOLIST_TABLE_SORT_KEY
       }
     });
 
