@@ -13,14 +13,9 @@ export class TodolistServerlessStack extends cdk.Stack {
 
     const todolistTable = new Table(this, 'todolistTable', {
       partitionKey: { name: 'userId', type: AttributeType.STRING },
-      sortKey: { name: 'createdAt', type: AttributeType.NUMBER },
+      sortKey: { name: 'todoId', type: AttributeType.STRING },
       tableName: 'todolist',
       removalPolicy: cdk.RemovalPolicy.DESTROY
-    });
-
-    todolistTable.addLocalSecondaryIndex({
-      indexName: "todoId-index",
-      sortKey: { name: "todoId", type: AttributeType.STRING }
     });
 
     const nodeModulesLayer = new LayerVersion(this, 'NodeModulesLayer', {
@@ -39,13 +34,12 @@ export class TodolistServerlessStack extends cdk.Stack {
       }
     });
 
-    const readTodolistLambda = new Function(this, 'readTodolistFunction', {
+    const readOneTodolistLambda = new Function(this, 'readOneTodolistFunction', {
       runtime: Runtime.NODEJS_12_X,
       code: new AssetCode('lambda'),
-      handler: 'read.handler',
+      handler: 'read-one.handler',
       environment: {
-        TABLE_NAME: TODOLIST_TABLE_NAME,
-        PRIMARY_KEY: 'todoId'
+        TABLE_NAME: TODOLIST_TABLE_NAME
       }
     });
 
@@ -70,7 +64,7 @@ export class TodolistServerlessStack extends cdk.Stack {
     });
 
     todolistTable.grantWriteData(createTodolistLambda);
-    todolistTable.grantReadData(readTodolistLambda);
+    todolistTable.grantReadData(readOneTodolistLambda);
     todolistTable.grantWriteData(updateTodolistLambda);
     todolistTable.grantWriteData(deleteTodolistLambda);
 
@@ -104,8 +98,8 @@ export class TodolistServerlessStack extends cdk.Stack {
     todolist.addMethod("POST", createIntegration, cognitoAuthorization);
 
     const todolistForSingle = todolist.addResource('{todoId}');
-    const readIntegration = new LambdaIntegration(readTodolistLambda);
-    todolistForSingle.addMethod('GET', readIntegration, cognitoAuthorization);
+    const readOneIntegration = new LambdaIntegration(readOneTodolistLambda);
+    todolistForSingle.addMethod('GET', readOneIntegration, cognitoAuthorization);
 
     const updateIntegration = new LambdaIntegration(updateTodolistLambda);
     todolistForSingle.addMethod('PATCH', updateIntegration, cognitoAuthorization);
