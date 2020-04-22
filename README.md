@@ -1,4 +1,8 @@
-# todolist-serverless
+# Todolist API built with the serverless
+
+## API Reference
+
+https://github.com/sano307/todolist-serverless/wiki/API-Reference
 
 ## Certification
 
@@ -61,6 +65,3 @@ cdk diff
 cdk deploy
 ```
 
-## API Reference
-
-https://github.com/sano307/todolist-serverless/wiki/API-Reference
