@@ -3,7 +3,7 @@ import { App } from '@aws-cdk/core';
 import { TodolistServerlessStack } from '../lib/todolist-serverless-stack';
 
 describe('todolist', () => {
-  test('default', () => {
+  test('Snapshot', () => {
     const app = new App();
     const stack = new TodolistServerlessStack(app, "TestTodolistServerlessStack");
     expect(SynthUtils.toCloudFormation(stack)).toMatchSnapshot();
