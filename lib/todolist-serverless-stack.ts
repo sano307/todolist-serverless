@@ -44,6 +44,12 @@ export class TodolistServerlessStack extends cdk.Stack {
       handler: "sign-up.handler"
     });
 
+    const confirmSignUpLambda = new Function(this, "confirmSignUpFunction", {
+      runtime: Runtime.NODEJS_12_X,
+      code: new AssetCode("lambda"),
+      handler: "confirm-sign-up.handler"
+    });
+
     const createTodolistLambda = new Function(this, "createTodolistFunction", {
       runtime: Runtime.NODEJS_12_X,
       code: new AssetCode("lambda"),
@@ -139,6 +145,9 @@ export class TodolistServerlessStack extends cdk.Stack {
 
     const signUpIntegration = new LambdaIntegration(signUpLambda);
     todolistRestApi.root.addResource("signup").addMethod("POST", signUpIntegration);
+
+    const confirmSignUpIntegration = new LambdaIntegration(confirmSignUpLambda);
+    todolistRestApi.root.addResource("confirm_signup").addMethod("POST", confirmSignUpIntegration);
 
     const todolist = todolistRestApi.root.addResource("todolists");
     const createIntegration = new LambdaIntegration(createTodolistLambda);
