@@ -25,6 +25,6 @@ export const handler = async (event: any = {}): Promise<any> => { // eslint-disa
     await cognito.signUp(params).promise();
     return { statusCode: 200, body: "" };
   } catch (e) {
-    return { statusCode: 500, body: e.message };
+    return { statusCode: 500, body: JSON.stringify(e) };
   }
 };

@@ -7,9 +7,6 @@ const TABLE_NAME = process.env.TABLE_NAME || "";
 const PARTITION_KEY = process.env.PARTITION_KEY || "";
 const SORT_KEY = process.env.SORT_KEY || "";
 
-const RESERVED_RESPONSE = `Error: You're using AWS reserved keywords as attributes`,
-  DYNAMODB_EXECUTION_ERROR = `Error: Execution update, caused a Dynamodb error, please take a look at your CloudWatch Logs.`;
-
 export const handler = async (event: any = {}): Promise<any> => { // eslint-disable-line
   if (!event.body) {
     return {
@@ -61,15 +58,8 @@ export const handler = async (event: any = {}): Promise<any> => { // eslint-disa
 
   try {
     await db.update(params).promise();
-
     return { statusCode: 204, body: "" };
-  } catch (dbError) {
-    const errorResponse =
-      dbError.code === "ValidationException" &&
-      dbError.message.includes("reserved keyword")
-        ? DYNAMODB_EXECUTION_ERROR
-        : RESERVED_RESPONSE;
-
-    return { statusCode: 500, body: errorResponse };
+  } catch (e) {
+    return { statusCode: 500, body: JSON.stringify(e) };
   }
 };

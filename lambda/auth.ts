@@ -31,6 +31,6 @@ export const handler = async (event: any = {}): Promise<any> => { // eslint-disa
       body: JSON.stringify({ idToken: response.AuthenticationResult?.IdToken }),
     };
   } catch (e) {
-    return { statusCode: 500, body: e.message };
+    return { statusCode: 500, body: JSON.stringify(e) };
   }
 };

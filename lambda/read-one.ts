@@ -30,7 +30,7 @@ export const handler = async (event: any = {}): Promise<any> => { // eslint-disa
   try {
     const response = await db.get(params).promise();
     return { statusCode: 200, body: JSON.stringify(response.Item) };
-  } catch (dbError) {
-    return { statusCode: 500, body: JSON.stringify(dbError) };
+  } catch (e) {
+    return { statusCode: 500, body: JSON.stringify(e) };
   }
 };
