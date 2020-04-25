@@ -38,6 +38,12 @@ export class TodolistServerlessStack extends cdk.Stack {
       compatibleRuntimes: [Runtime.NODEJS_12_X],
     });
 
+    const signUpLambda = new Function(this, "signUpFunction", {
+      runtime: Runtime.NODEJS_12_X,
+      code: new AssetCode("lambda"),
+      handler: "sign-up.handler"
+    });
+
     const createTodolistLambda = new Function(this, "createTodolistFunction", {
       runtime: Runtime.NODEJS_12_X,
       code: new AssetCode("lambda"),
@@ -110,6 +116,7 @@ export class TodolistServerlessStack extends cdk.Stack {
     });
 
     const todolistUserPool = new UserPool(this, "todolist", {
+      selfSignUpEnabled: true,
       signInAliases: {
         email: true,
       },
@@ -129,6 +136,9 @@ export class TodolistServerlessStack extends cdk.Stack {
         authorizerId: authorizer.ref,
       },
     };
+
+    const signUpIntegration = new LambdaIntegration(signUpLambda);
+    todolistRestApi.root.addResource("signup").addMethod("POST", signUpIntegration);
 
     const todolist = todolistRestApi.root.addResource("todolists");
     const createIntegration = new LambdaIntegration(createTodolistLambda);

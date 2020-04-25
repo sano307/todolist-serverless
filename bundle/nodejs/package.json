@@ -11,8 +11,8 @@
     "cdk": "cdk",
     "cdk:diff": "cdk diff || true",
     "cdk:deploy": "cdk deploy --require-approval never",
-    "lint": "eslint bin/** lib/** lambda/**",
-    "lint:fix": "eslint --fix bin/** lib/** lambda/**"
+    "lint": "eslint bin/**/* lib/**/* lambda/**/*",
+    "lint:fix": "eslint --fix bin/**/* lib/**/* lambda/**/*"
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.32.2",
