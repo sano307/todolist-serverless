@@ -1,7 +1,7 @@
 import * as AWS from "aws-sdk";
 
 const cognito = new AWS.CognitoIdentityServiceProvider();
-const WUNDER_LIST_CLIENT_ID = "5ma31tppl2v2641mlp9q2jsa6q";
+const CLIENT_ID = process.env.CLIENT_ID || "";
 
 export const handler = async (event: any = {}): Promise<any> => { // eslint-disable-line
 
@@ -16,7 +16,7 @@ export const handler = async (event: any = {}): Promise<any> => { // eslint-disa
     typeof event.body == "object" ? event.body : JSON.parse(event.body);
 
   const params = {
-    ClientId: WUNDER_LIST_CLIENT_ID,
+    ClientId: CLIENT_ID,
     Username: item["email"],
     Password: item["password"],
   };

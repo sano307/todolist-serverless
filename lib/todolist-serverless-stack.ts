@@ -19,6 +19,8 @@ export class TodolistServerlessStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const WUNDER_LIST_CLIENT_ID = "5ma31tppl2v2641mlp9q2jsa6q";
+
     const TODOLIST_TABLE_NAME = "todolist";
     const TODOLIST_TABLE_PARTITION_KEY = "userId";
     const TODOLIST_TABLE_SORT_KEY = "todoId";
@@ -41,19 +43,28 @@ export class TodolistServerlessStack extends cdk.Stack {
     const signUpLambda = new Function(this, "signUpFunction", {
       runtime: Runtime.NODEJS_12_X,
       code: new AssetCode("lambda"),
-      handler: "sign-up.handler"
+      handler: "sign-up.handler",
+      environment: {
+        CLIENT_ID: WUNDER_LIST_CLIENT_ID,
+      },
     });
 
     const confirmSignUpLambda = new Function(this, "confirmSignUpFunction", {
       runtime: Runtime.NODEJS_12_X,
       code: new AssetCode("lambda"),
-      handler: "confirm-sign-up.handler"
+      handler: "confirm-sign-up.handler",
+      environment: {
+        CLIENT_ID: WUNDER_LIST_CLIENT_ID,
+      },
     });
 
     const authLambda = new Function(this, "authFunction", {
       runtime: Runtime.NODEJS_12_X,
       code: new AssetCode("lambda"),
-      handler: "auth.handler"
+      handler: "auth.handler",
+      environment: {
+        CLIENT_ID: WUNDER_LIST_CLIENT_ID,
+      },
     });
 
     const createTodolistLambda = new Function(this, "createTodolistFunction", {
