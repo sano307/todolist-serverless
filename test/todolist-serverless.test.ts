@@ -38,7 +38,7 @@ describe('todolist', () => {
 
     expect(stack).toHaveResource('AWS::Cognito::UserPool', {
       AdminCreateUserConfig: {
-        AllowAdminCreateUserOnly: true
+        AllowAdminCreateUserOnly: false
       },
       AutoVerifiedAttributes: [
         "email"

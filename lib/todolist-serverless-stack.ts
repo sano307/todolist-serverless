@@ -19,6 +19,8 @@ export class TodolistServerlessStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    const WUNDER_LIST_CLIENT_ID = "5ma31tppl2v2641mlp9q2jsa6q";
+
     const TODOLIST_TABLE_NAME = "todolist";
     const TODOLIST_TABLE_PARTITION_KEY = "userId";
     const TODOLIST_TABLE_SORT_KEY = "todoId";
@@ -36,6 +38,33 @@ export class TodolistServerlessStack extends cdk.Stack {
     const nodeModulesLayer = new LayerVersion(this, "NodeModulesLayer", {
       code: AssetCode.fromAsset(NODE_LAMBDA_LAYER_DIR),
       compatibleRuntimes: [Runtime.NODEJS_12_X],
+    });
+
+    const signUpLambda = new Function(this, "signUpFunction", {
+      runtime: Runtime.NODEJS_12_X,
+      code: new AssetCode("lambda"),
+      handler: "sign-up.handler",
+      environment: {
+        CLIENT_ID: WUNDER_LIST_CLIENT_ID,
+      },
+    });
+
+    const confirmSignUpLambda = new Function(this, "confirmSignUpFunction", {
+      runtime: Runtime.NODEJS_12_X,
+      code: new AssetCode("lambda"),
+      handler: "confirm-sign-up.handler",
+      environment: {
+        CLIENT_ID: WUNDER_LIST_CLIENT_ID,
+      },
+    });
+
+    const authLambda = new Function(this, "authFunction", {
+      runtime: Runtime.NODEJS_12_X,
+      code: new AssetCode("lambda"),
+      handler: "auth.handler",
+      environment: {
+        CLIENT_ID: WUNDER_LIST_CLIENT_ID,
+      },
     });
 
     const createTodolistLambda = new Function(this, "createTodolistFunction", {
@@ -110,6 +139,7 @@ export class TodolistServerlessStack extends cdk.Stack {
     });
 
     const todolistUserPool = new UserPool(this, "todolist", {
+      selfSignUpEnabled: true,
       signInAliases: {
         email: true,
       },
@@ -129,6 +159,15 @@ export class TodolistServerlessStack extends cdk.Stack {
         authorizerId: authorizer.ref,
       },
     };
+
+    const signUpIntegration = new LambdaIntegration(signUpLambda);
+    todolistRestApi.root.addResource("signup").addMethod("POST", signUpIntegration);
+
+    const confirmSignUpIntegration = new LambdaIntegration(confirmSignUpLambda);
+    todolistRestApi.root.addResource("confirm_signup").addMethod("POST", confirmSignUpIntegration);
+
+    const authIntegration = new LambdaIntegration(authLambda);
+    todolistRestApi.root.addResource("auth").addMethod("POST", authIntegration);
 
     const todolist = todolistRestApi.root.addResource("todolists");
     const createIntegration = new LambdaIntegration(createTodolistLambda);
