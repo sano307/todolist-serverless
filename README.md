@@ -22,6 +22,7 @@ aws_secret_access_key = yyy
 | Node.js                  | `brew install nodebrew`</br>`nodebrew install v12.12.0`</br>`nodebrew use v12.12.0` | `12.12.0` |
 | npm                      | - | `6.11.3` |
 | AWS CDK                  | `npm install -g aws-cdk` | `1.32.2` |
+| AWS SDK                  | - | `2.663.0` |
 
 ## Build
 
