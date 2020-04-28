@@ -24,6 +24,12 @@ aws_secret_access_key = yyy
 | AWS CDK                  | - | `1.36.0` |
 | AWS SDK                  | - | `2.663.0` |
 
+## Install dependencies
+
+```shell
+npm ci
+```
+
 ## Build
 
 ```shell
