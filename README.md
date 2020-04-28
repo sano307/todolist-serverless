@@ -21,6 +21,7 @@ aws_secret_access_key = yyy
 |--------------------------|----------------------------------------------|-----|
 | Node.js                  | `brew install nodebrew`</br>`nodebrew install v12.12.0`</br>`nodebrew use v12.12.0` | `12.12.0` |
 | npm                      | - | `6.11.3` |
+| TypeScript               | - | `3.8.3` |
 | AWS CDK                  | - | `1.36.0` |
 | AWS SDK                  | - | `2.663.0` |
 
