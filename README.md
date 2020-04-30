@@ -1,5 +1,9 @@
 # Todolist API built with the serverless
 
+## Design
+
+https://github.com/sano307/todolist-serverless/wiki/Design
+
 ## API Reference
 
 https://github.com/sano307/todolist-serverless/wiki/API-Reference
