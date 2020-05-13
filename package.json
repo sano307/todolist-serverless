@@ -21,7 +21,7 @@
     "@types/luxon": "^1.22.0",
     "@types/node": "12.12.0",
     "@types/uuid": "^7.0.2",
-    "@typescript-eslint/eslint-plugin": "^2.29.0",
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.28.0",
     "aws-cdk": "1.36.0",
     "eslint": "^6.8.0",
