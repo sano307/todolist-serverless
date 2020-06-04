@@ -40,7 +40,7 @@
     "@aws-cdk/aws-dynamodb": "^1.32.2",
     "@aws-cdk/aws-lambda": "^1.32.2",
     "@aws-cdk/core": "1.32.2",
-    "aws-sdk": "^2.663.0",
+    "aws-sdk": "^2.690.0",
     "luxon": "^1.23.0",
     "source-map-support": "^0.5.16",
     "uuid": "^7.0.3"
